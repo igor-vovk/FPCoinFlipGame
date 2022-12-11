@@ -23,16 +23,23 @@ object CoinFlip extends App {
             case "H" | "T" => {
                 val coinTossResult = tossCoin(random)
                 val newNumFlips = gameState.numFlips + 1
-                if (userInput == coinTossResult) {
-                    val newNumCorrect = gameState.numCorrect + 1
-                    val newGameState = gameState.copy(numFlips = newNumFlips, numCorrect = newNumCorrect)
-                    printGameState(printableFlipResult(coinTossResult), newGameState)
-                    mainLoop(newGameState, random)
-                } else {
-                    val newGameState = gameState.copy(numFlips = newNumFlips)
-                    printGameState(printableFlipResult(coinTossResult), newGameState)
-                    mainLoop(newGameState, random)
-                }
+                
+                val newGameState = 
+                    if (userInput == coinTossResult) {
+                        val newNumCorrect = gameState.numCorrect + 1
+                        
+                        gameState.copy(
+                            numFlips = newNumFlips, 
+                            numCorrect = newNumCorrect
+                        )
+                    } else {
+                        gameState.copy(
+                            numFlips = newNumFlips
+                        )
+                    }
+
+                printGameState(printableFlipResult(coinTossResult), newGameState)
+                mainLoop(newGameState, random)
             }
             case _   => {
                 printGameOver()
