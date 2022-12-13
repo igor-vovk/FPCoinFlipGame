@@ -3,50 +3,61 @@ package com.alvinalexander.coinflip.v1
 import CoinFlipUtils._
 import scala.annotation.tailrec
 import scala.util.Random
+import cats.effect.{ExitCode, IO, IOApp}
 
 case class GameState(numFlips: Int, numCorrect: Int)
 
-object CoinFlip extends App {
+object CoinFlip extends IOApp {
 
+    def printableFlipResult(flip: String): String = flip match {
+        case "H" => "Heads"
+        case "T" => "Tails"
+    }
+
+    def run (args: List[String]): IO[ExitCode] = {
+        val r = Random
+        val s = GameState(0, 0)
+        mainLoop(s, r).as(ExitCode.Success)
+    }
+    
     val r = Random
     val s = GameState(0, 0)
     mainLoop(s, r)
 
-    @tailrec
-    def mainLoop(gameState: GameState, random: Random) {
+    def mainLoop(gameState: GameState, random: Random): IO[Unit] = {
 
-        showPrompt()
-        val userInput = getUserInput()
+        for {
+            _ <- showPrompt()
+            userInput <- getUserInput()
+            _ <- userInput match {
+                case "H" | "T" => for {
+                    coinTossResult <- tossCoin(random)
+                    newNumFlips = gameState.numFlips + 1
+                    
+                    newGameState = 
+                        if (userInput == coinTossResult) {
+                            val newNumCorrect = gameState.numCorrect + 1
+                            
+                            gameState.copy(
+                                numFlips = newNumFlips, 
+                                numCorrect = newNumCorrect
+                            )
+                        } else {
+                            gameState.copy(
+                                numFlips = newNumFlips
+                            )
+                        }
 
-        // handle the result
-        userInput match {
-            case "H" | "T" => {
-                val coinTossResult = tossCoin(random)
-                val newNumFlips = gameState.numFlips + 1
-                
-                val newGameState = 
-                    if (userInput == coinTossResult) {
-                        val newNumCorrect = gameState.numCorrect + 1
-                        
-                        gameState.copy(
-                            numFlips = newNumFlips, 
-                            numCorrect = newNumCorrect
-                        )
-                    } else {
-                        gameState.copy(
-                            numFlips = newNumFlips
-                        )
-                    }
+                    _ <- printGameState(printableFlipResult(coinTossResult), newGameState)
+                    _ <- mainLoop(newGameState, random)
+                } yield ()
 
-                printGameState(printableFlipResult(coinTossResult), newGameState)
-                mainLoop(newGameState, random)
+                case _   => for {
+                    _ <- printGameOver()
+                    _ <- printGameState(gameState)
+                    // return out of the recursion here
+                } yield ()
             }
-            case _   => {
-                printGameOver()
-                printGameState(gameState)
-                // return out of the recursion here
-            }
-        }
+        } yield ()
     }
-
 }

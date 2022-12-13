@@ -2,35 +2,33 @@ package com.alvinalexander.coinflip.v1
 
 import scala.util.Random
 import scala.io.StdIn.readLine
+import cats.effect.IO
 
 object CoinFlipUtils {
 
-    def showPrompt(): Unit =
+    def showPrompt(): IO[Unit] = IO {
         print("\n(h)eads, (t)ails, or (q)uit: ") 
+    }
 
-    def getUserInput(): String = 
+    def getUserInput(): IO[String] = IO { 
         readLine.trim.toUpperCase
-
-    def printableFlipResult(flip: String): String = flip match {
-        case "H" => "Heads"
-        case "T" => "Tails"
     }
 
-    def printGameState(printableFlipResult: String, gameState: GameState): Unit = {
+    def printGameState(printableFlipResult: String, gameState: GameState): IO[Unit] = IO {
         print(s"Flip was $printableFlipResult. ")
-        
-        printGameState(gameState)
-    }
-
-    def printGameState(gameState: GameState): Unit = {
         println(s"#Flips: ${gameState.numFlips}, #Correct: ${gameState.numCorrect}")
     }
 
-    def printGameOver(): Unit =
+    def printGameState(gameState: GameState): IO[Unit] = IO {
+        println(s"#Flips: ${gameState.numFlips}, #Correct: ${gameState.numCorrect}")
+    }
+
+    def printGameOver(): IO[Unit] = IO {
         println("\n=== GAME OVER ===")
+    }
 
     // returns "H" for heads, "T" for tails
-    def tossCoin(r: Random): String = {
+    def tossCoin(r: Random): IO[String] = IO {
         val i = r.nextInt(2)
         
         i match {
