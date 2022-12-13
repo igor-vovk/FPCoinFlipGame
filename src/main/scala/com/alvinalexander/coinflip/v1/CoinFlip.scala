@@ -19,10 +19,6 @@ object CoinFlip extends IOApp {
         val s = GameState(0, 0)
         mainLoop(s, r).as(ExitCode.Success)
     }
-    
-    val r = Random
-    val s = GameState(0, 0)
-    mainLoop(s, r)
 
     def mainLoop(gameState: GameState, random: Random): IO[Unit] = {
 
