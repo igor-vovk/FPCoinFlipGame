@@ -2,7 +2,7 @@ name := "FPCoinFlip"
 
 version := "1.0"
 
-scalaVersion := "2.12.2"
+scalaVersion := "3.2.0"
 
 scalacOptions += "-deprecation"
 
