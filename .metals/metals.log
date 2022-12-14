@@ -1134,3 +1134,5 @@ WARNING: Unmatched cancel notification for request id 1330
 2022.12.14 06:30:44 INFO  time: indexed workspace in 4.09s
 Dec 14, 2022 6:30:59 AM org.eclipse.lsp4j.jsonrpc.services.GenericEndpoint notify
 INFO: Unsupported notification method: $/setTrace
+2022.12.14 06:34:57 INFO  compiling fpcoinflipgame (1 scala source)
+2022.12.14 06:34:57 INFO  time: compiled fpcoinflipgame in 0.64s

@@ -12,9 +12,17 @@ object CoinFlip extends IOApp {
     case "H" => "Heads"
     case "T" => "Tails"
 
+<<<<<<< HEAD
   def run (args: List[String]): IO[ExitCode] = 
     val s = GameState(0, 0)
     mainLoop(s).as(ExitCode.Success)
+=======
+    def run (args: List[String]): IO[ExitCode] = {
+        val r = Random
+        val s = GameState(0, 0)
+        mainLoop(s, r).as(ExitCode.Success)
+    }
+>>>>>>> dffd37a54bca01ceeb35d6017a4dd8bd8e2f79a4
 
   def mainLoop(gameState: GameState): IO[Unit] = 
 
